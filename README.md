@@ -2,11 +2,11 @@
 
 A small tool for the Nebraska Legislature. Given a bill, it works out which sections of the Revised Statutes of Nebraska the bill cites, finds the definitions sections that govern those sections, and shows the defined terms that actually appear in the bill, each with its full definition and section citation.
 
-**Status: Phase 1 (discovery and design).** No application code yet. See `docs/DESIGN.md`.
+**Status: Phase 2 (statute extraction) in progress.** The extractor is written and tested on saved pages; the full statute build has not been run yet. The page itself is not started. See `docs/DESIGN.md`.
 
 ## What it does
 
-- Accepts a bill as an uploaded PDF or pasted text. A bill number path is planned through the separate `nebraska-bill-packet` tool (see `docs/DESIGN.md`).
+- Accepts a bill as an uploaded PDF or pasted text. Typing a bill number only opens the Legislature's page so the PDF can be downloaded and dropped in (the page cannot fetch bills itself).
 - Detects existing statute sections cited in the bill (title and enacting clause).
 - Maps each cited section to the definitions section(s) whose scope covers it.
 - Scans the bill text for those defined terms and displays only the ones that appear, grouped by source act or chapter.
@@ -38,4 +38,13 @@ tests/             unit tests and the gold test set (tests/gold/README.md)
 
 ## Rebuilding the statute data
 
-Not implemented yet (Phase 2). The scraper must be run on a machine that can reach nebraskalegislature.gov. See `data/SOURCES.md` for the refresh procedure as it develops.
+Needs a machine that can reach nebraskalegislature.gov, and Python 3.11 or newer (no packages to install):
+
+    python scripts/extract_definitions.py all
+
+On Windows you can double-click `scripts/extract.bat`. It takes roughly one to two hours, can be stopped and restarted, and writes `data/definitions.json` and `data/build_report.md`. Then run the checks:
+
+    python scripts/validate_definitions.py
+    python -m unittest discover -s tests/python
+
+See `data/SOURCES.md` for the full refresh procedure.

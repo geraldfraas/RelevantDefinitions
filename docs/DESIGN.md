@@ -36,7 +36,7 @@ PDF / pasted text / fetched bill -> normalize() -> detectSections() -> mapScopes
       "chapter": "48",
       "act_name": "...",
       "scope": {
-        "type": "range | article | chapter | act | unparsed",
+        "type": "sections | section | chapter | act | all_statutes | pointer | unparsed",
         "raw_text": "As used in sections 48-601 to 48-669, ...",
         "from": "48-601", "to": "48-669",
         "unless_context_otherwise_requires": true
@@ -53,6 +53,28 @@ PDF / pasted text / fetched bill -> normalize() -> detectSections() -> mapScopes
 ```
 
 `section_index` is ordered. Ranges can only be resolved against the real ordering because numbering has suffixes and gaps. `raw_text` is kept on every scope so a reviewer can see what the parser read.
+
+## What the real statute pages show (2026-11-17, from saved pages)
+
+Scope language is not usually "As used in sections X to Y." Observed forms, all handled or flagged by `scripts/nelaws.py`:
+
+| Form | Example | How it resolves |
+| --- | --- | --- |
+| Named act | 48-602 "For purposes of the Employment Security Law" | The act's own "how cited" section gives the range ("Sections 48-601 to 48-683 shall be known and may be cited as..."). Ranges can be several pieces (the Criminal Code is 28-101 to 28-1358, 28-1601 to 28-1603 and 28-1701). |
+| Explicit range | 81-145 "As used in sections 81-145 to 81-161.06" | Direct. |
+| Single section | 81-117.01 "As used in section 81-117" | Direct. |
+| Global rule | 49-801 "words and phrases in the statutes of Nebraska" | Never mapped to a bill by default; offered as optional general construction. |
+| "Definitions, where found" pointer | 49-1403 | The definitions live in the listed sections (49-1404 to 49-1444), which usually state no scope; they inherit the act from the pointer. |
+| Single term, scope in prose | 48-114 "Employer, defined." | Term comes from the title; scope from the act named in the text, or flagged. |
+| "this act", "this article" | many | "this act" resolves through act ranges. "this article" cannot yet: the chapter index has no article boundaries. Flagged. |
+
+Other findings:
+
+- Terms are introduced as "(1) Term means / shall mean / includes / shall signify ...", sometimes with qualifiers ("Wages, except with respect to ..., means ...", "Domestic when applied to corporations means ..."). Qualifiers are cut from the term and the whole item is kept as the definition text.
+- Titles containing "defined" are not always definitions sections (28-107 "Felony or misdemeanor, defined outside of code"). Such sections are flagged, not dropped.
+- Statute pages separate the body from "Source" and "Annotations" blocks. Annotations quote case law that uses the same words; they must never be scanned.
+- Chapter index rows are in section order and include repealed and transferred sections. Index order, not numeric comparison, is used to resolve ranges.
+- Some sections carry "Operative Date" notes (49-1403 shows July 18, 2026). Sections with two versions or future operative dates are not yet handled; to be examined once the full data is in.
 
 ## Matching rules
 
