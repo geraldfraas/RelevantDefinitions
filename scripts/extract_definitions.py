@@ -131,7 +131,12 @@ def cmd_index(args):
 def load_index(raw_dir):
     """{chapter: rows}, chapters in the order of the chapter list when available."""
     chapters = {}
-    for path in sorted((Path(raw_dir) / "chapters").glob("chapter_*.html")):
+
+    def natural(path):
+        label = path.stem[len("chapter_"):]
+        return (0, int(label), "") if label.isdigit() else (1, 0, label)
+
+    for path in sorted((Path(raw_dir) / "chapters").glob("chapter_*.html"), key=natural):
         label = path.stem[len("chapter_"):]
         rows = nelaws.parse_chapter_index(path.read_text(encoding="utf-8", errors="replace"))
         chapters[label] = rows
@@ -291,6 +296,10 @@ def build(raw_dir):
         "chapters_indexed": len(index),
         "sections_in_index": sum(len(r) for r in index.values()),
         "current_sections": sum(1 for r in status_of.values() if r["status"] == "current"),
+        "first_section": next((rows[0] for rows in index.values() if rows), None),
+        "last_section": next((rows[-1] for rows in reversed(list(index.values())) if rows), None),
+        "first_current": next((r for rows in index.values() for r in rows if r["status"] == "current"), None),
+        "last_current": next((r for rows in reversed(list(index.values())) for r in reversed(rows) if r["status"] == "current"), None),
         "pages_parsed": len(pages),
         "pages_unreadable": unreadable,
         "acts_found": len(acts),
@@ -310,6 +319,11 @@ def render_report(report):
         "",
         f"- Chapters indexed: {report['chapters_indexed']}",
         f"- Sections in index: {report['sections_in_index']} (current: {report['current_sections']})",
+        *[f"- {label}: {r['section']} {r['title'][:70]} [{r['status']}]"
+          for label, r in (("First section in the index", report["first_section"]),
+                           ("Last section in the index", report["last_section"]),
+                           ("First current section", report["first_current"]),
+                           ("Last current section", report["last_current"])) if r],
         f"- Section pages parsed: {report['pages_parsed']}",
         f"- Acts with a citation section: {report['acts_found']}",
         f"- Definitions sections: {report['definition_sections']} "
