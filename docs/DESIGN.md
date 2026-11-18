@@ -74,8 +74,12 @@ Range, article and chapter-wide scopes; cross-reference definitions ("has the sa
 - Chapter-wide definitions can produce long lists, hence distinctive-first sorting.
 - Unparsed scope: shown as needs manual review, never silently dropped.
 
+## Decisions
+
+- **Hosting: GitHub Pages** (decided 2026-11-17).
+- **Output: shown in the browser, with a print-ready view that can be saved as PDF** (decided). Proposed implementation: a print stylesheet plus the browser's own "Save as PDF", which needs no PDF library. A generated PDF would need a library or a hand-written writer.
+- **PDF reader: lift from NE-Redliner, test-driven** (tentative). Replace it if it fails on real bills.
+
 ## Open decisions
 
-- Hosting: GitHub Pages or the owner's contracted server.
-- Bill-number path: new endpoint in `nebraska-bill-packet`, or a manual save-then-drop step.
-- Whether the PDF reader is lifted from NE-Redliner or replaced.
+- **Bill-number path.** The owner does not want a separate local tool in the loop. A page on GitHub Pages cannot fetch nebraskalegislature.gov directly (CORS). Options: (a) PDF upload and pasted text only, with bill-number entry just opening the Legislature's page so the user can download the PDF; (b) a small free proxy (for example a Cloudflare Worker) that relays the bill PDF, which is new infrastructure and would need an allowlist like `nebraska-bill-packet` has; (c) fold the definitions page into the local `nebraska-bill-packet` app instead of GitHub Pages. Needs the owner's choice.
