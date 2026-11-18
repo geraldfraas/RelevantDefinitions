@@ -115,10 +115,16 @@ def cmd_index(args):
             sys.exit(f"Found only {len(labels)} chapter links; expected 80 or more. "
                      "Send data/raw/browse-statutes.html so the parser can be fixed, "
                      "or pass --chapters explicitly.")
-    print(f"{len(labels)} chapters")
-    for label in labels:
-        url = BASE + "browse-chapters.php?chapter=" + urllib.parse.quote(label)
-        fetcher.get_to(url, Path(args.raw) / "chapters" / f"chapter_{safe_name(label)}.html", args.refresh)
+    print(f"{len(labels)} chapters. Downloading each chapter's section list "
+          f"(about {len(labels) * args.delay / 60:.0f} minutes; the window may look quiet between updates)...", flush=True)
+    try:
+        for n, label in enumerate(labels, 1):
+            url = BASE + "browse-chapters.php?chapter=" + urllib.parse.quote(label)
+            fetcher.get_to(url, Path(args.raw) / "chapters" / f"chapter_{safe_name(label)}.html", args.refresh)
+            if n % 5 == 0 or n == len(labels):
+                print(f"  chapters {n}/{len(labels)}", flush=True)
+    except Blocked as exc:
+        sys.exit(f"Stopped: {exc}. The site is refusing requests. Wait a while and run again; finished pages are kept.")
     report_failures(fetcher)
 
 
@@ -148,13 +154,13 @@ def cmd_fetch(args):
     fetcher = Fetcher(args.raw, args.delay)
     todo = [s for s in wanted if not (Path(args.raw) / "sections" / f"{safe_name(s)}.html").exists() or args.refresh]
     print(f"{len(wanted)} candidate sections, {len(todo)} still to download "
-          f"(about {len(todo) * args.delay / 60:.0f} minutes)")
+          f"(about {len(todo) * args.delay / 60:.0f} minutes)", flush=True)
     try:
         for n, section in enumerate(todo, 1):
             url = BASE + "statutes.php?statute=" + urllib.parse.quote(section, safe=",.-")
             fetcher.get_to(url, Path(args.raw) / "sections" / f"{safe_name(section)}.html", args.refresh)
             if n % 25 == 0:
-                print(f"  {n}/{len(todo)}")
+                print(f"  {n}/{len(todo)}", flush=True)
     except Blocked as exc:
         sys.exit(f"Stopped: {exc}. The site is refusing requests. Wait a while and run fetch again; "
                  "finished pages are kept.")
