@@ -80,6 +80,8 @@ Range, article and chapter-wide scopes; cross-reference definitions ("has the sa
 - **Output: shown in the browser, with a print-ready view that can be saved as PDF** (decided). Proposed implementation: a print stylesheet plus the browser's own "Save as PDF", which needs no PDF library. A generated PDF would need a library or a hand-written writer.
 - **PDF reader: lift from NE-Redliner, test-driven** (tentative). Replace it if it fails on real bills.
 
+- **Bill input: PDF upload or pasted text only** (decided 2026-11-17, option (a)). Typing a bill number just opens the Legislature's page so the user can download the PDF and drop it in. No relay and no local tool. Option (c), folding this feature into the local `nebraska-bill-packet` app, stays available as a later extension because both would feed the same plain-text pipeline.
+
 ## Open decisions
 
-- **Bill-number path.** The owner does not want a separate local tool in the loop. A page on GitHub Pages cannot fetch nebraskalegislature.gov directly (CORS). Options: (a) PDF upload and pasted text only, with bill-number entry just opening the Legislature's page so the user can download the PDF; (b) a small free proxy (for example a Cloudflare Worker) that relays the bill PDF, which is new infrastructure and would need an allowlist like `nebraska-bill-packet` has; (c) fold the definitions page into the local `nebraska-bill-packet` app instead of GitHub Pages. Needs the owner's choice.
+None at present. Next input needed: `statute_samples.zip` from `scripts/fetch_samples.py`.
