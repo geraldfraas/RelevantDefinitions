@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+.DS_Store
+# raw scraped pages are large and reproducible; only extracted JSON is committed
+data/raw/
