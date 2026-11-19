@@ -76,6 +76,28 @@ Other findings:
 - Chapter index rows are in section order and include repealed and transferred sections. Index order, not numeric comparison, is used to resolve ranges.
 - Some sections carry "Operative Date" notes (49-1403 shows July 18, 2026). Sections with two versions or future operative dates are not yet handled; to be examined once the full data is in.
 
+## How bills cite statutes (from LB542 and AM2839 text, 2026-11-19)
+
+Observed in the sample bill and amendment text embedded in the NE-Redliner repo:
+
+- **Title** lists what is amended and repealed: "to amend sections 14-2113 and 39-1304.02, Reissue Revised Statutes of Nebraska; ... and to repeal the original section."
+- **Operative clauses** repeat it: "Section 1. Section 14-2113, Reissue Revised Statutes of Nebraska, is amended to read:" and "Sec. 3. Original sections ..., are repealed."
+- **Edition labels** vary by section ("Reissue Revised Statutes of Nebraska", "Revised Statutes Supplement, 2025", "Revised Statutes Cumulative Supplement, YYYY"). Kept per section; a bill can mix them.
+- **Amendments** (AM numbers) have no title paragraph, so detection must also work from the clauses alone.
+- **Text of an amended section is reproduced in full** inside the bill, including its own cross references ("as defined in section 86-5,104") and, for definitions sections, its "shall be known and may be cited as" sentence.
+- A bill's own sections are "section 2 of this act"; they never match the `NN-NNN` pattern.
+
+Two tiers result, and the page should keep them apart:
+
+1. **Primary**: amended, repealed or outright repealed, named in the title or an operative clause. These decide which acts are touched.
+2. **Referenced only**: mentioned inside the text ("as described in section 18-2201"). Not changed by the bill. Shown secondarily; these are often cross-reference definitions, which is useful but not the bill's own scope.
+
+Detection rules (`src/sections.js`): a number counts only if its chapter is 1 to 90; in running text it must follow the word "section(s)" (this removes "$1-5 million", "10-12 members"); ranges ("71-1908 to 71-1923.03") are returned as ranges and expanded later against the section index; sections in the title but missing from the clauses (or the reverse) produce a warning.
+
+Not yet checked against real PDFs: the line-number, page-number and header stripping in `src/normalize.js`. It is written from the layout notes in NE-Redliner (31 numbered lines per page, "-n-" page numbers, headers like "LB542 2025") and has only been tested on synthetic noise.
+
+Possible improvement: the NE-Redliner PDF reader keeps underline (new text) and strike-through (deleted text) as flags on each run. If the page reads PDFs with that reader, terms appearing only in struck text could be marked as such. This is optional and would loosen the current "no strike-and-insert parsing" rule, so it needs your decision.
+
 ## Matching rules
 
 - Case-insensitive, whole-word, simple plural and variant handling.

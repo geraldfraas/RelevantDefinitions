@@ -12,7 +12,7 @@ import html
 import re
 
 # A statute section number: 28-101, 49-14,100, 81-161.06, 48-1,110, 48-628.13
-SECTION = r"\d{1,3}-\d{1,4}(?:,\d{1,4})?(?:\.\d{1,3})?"
+SECTION = r"\d{1,3}-\d{1,4}(?:,\d{1,4}(?![\d-]))?(?:\.\d{1,3})?"
 SECTION_RE = re.compile(SECTION)
 
 # ---------------------------------------------------------------- extraction

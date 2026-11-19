@@ -2,7 +2,7 @@
 
 A small tool for the Nebraska Legislature. Given a bill, it works out which sections of the Revised Statutes of Nebraska the bill cites, finds the definitions sections that govern those sections, and shows the defined terms that actually appear in the bill, each with its full definition and section citation.
 
-**Status: Phase 2 (statute extraction) in progress.** The extractor is written and tested on saved pages; the full statute build has not been run yet. The page itself is not started. See `docs/DESIGN.md`.
+**Status:** Phase 2 (statute extraction): extractor written and tested on saved pages; the full statute build has not been run yet. Phase 3 (section detection): bill text normalization and citation detection written and tested on excerpts of two real documents; not yet tested on whole real bills or PDFs. The page is not started. See `docs/DESIGN.md`.
 
 ## What it does
 
@@ -35,6 +35,11 @@ scripts/           offline statute extraction and validation (Python, standard l
 src/               page, bill normalization, section detection, matching
 tests/             unit tests and the gold test set (tests/gold/README.md)
 ```
+
+## Tests
+
+    node --test "tests/js/*.test.js"        # bill text and citation detection (Node 20+)
+    python -m unittest discover -s tests/python   # statute parsing
 
 ## Rebuilding the statute data
 

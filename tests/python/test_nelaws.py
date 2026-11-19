@@ -68,6 +68,9 @@ class SectionLists(unittest.TestCase):
         got = nelaws.parse_section_list("28-101 to 28-1358, 28-1601 to 28-1603, and 28-1701")
         self.assertEqual(got, [["28-101", "28-1358"], ["28-1601", "28-1603"], ["28-1701", "28-1701"]])
 
+    def test_list_without_spaces_is_not_read_as_a_comma_number(self):
+        self.assertEqual(nelaws.parse_section_list("28-101,28-102"), [["28-101", "28-101"], ["28-102", "28-102"]])
+
     def test_comma_section_number_is_one_token(self):
         self.assertEqual(nelaws.parse_section_list("49-1493 to 49-14,104"), [["49-1493", "49-14,104"]])
 

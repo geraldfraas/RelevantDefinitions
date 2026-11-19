@@ -1,0 +1,7 @@
+{
+  "name": "relevant-definitions",
+  "private": true,
+  "type": "module",
+  "description": "Shows the statutory definitions that govern the terms in a Nebraska bill.",
+  "scripts": { "test": "node --test \"tests/js/*.test.js\"" }
+}

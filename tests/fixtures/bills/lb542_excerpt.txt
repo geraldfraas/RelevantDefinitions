@@ -1,0 +1,8 @@
+LEGISLATIVE BILL 542
+A BILL FOR AN ACT relating to roads; to amend sections 14-2113 and 39-1304.02, Reissue Revised Statutes of Nebraska; to define terms; to change provisions relating to utility facilities; to harmonize provisions; to eliminate obsolete provisions; and to repeal the original section.
+Be it enacted by the people of the State of Nebraska,
+Section 1. Section 14-2113, Reissue Revised Statutes of Nebraska, is amended to read:
+14-2113 [body omitted] subject to the provisions of sections 39-1361 and 39-1362, except that while any permit hereafter granted shall not be construed to be a contract as referred to within the provisions of section 39-1304.02, such parties may separately contract in relation to relocation of facilities.
+Sec. 2. Section 39-1304.02, Reissue Revised Statutes of Nebraska, is amended to read:
+39-1304.02 (1) [body omitted] (c) Utility facility includes: (i) Any facility of a commercial broadband supplier as defined in section 86-5,104; and (ii) Any facility of a community antenna television service as described in section 18-2201.
+Sec. 3. Original sections 14-2113 and 39-1304.02, Reissue Revised Statutes of Nebraska, are repealed.
